@@ -34,14 +34,14 @@ const upload = () => {
         const data = {
             id: uuid,
             resumePath: uploadedFile.path,
-            imagePath: uploadedImageFile.path,
+            ImagePath: uploadedImageFile.path,
             companyName,
             jobTitle,
             jobDescription,
-            feedback: "" as any,
-            createdAt: new Date().toISOString(),
-            status: "processing"
-        };
+            feedback: "",
+        }
+
+        await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText("Analyzing...");
 
         const feedback = await ai.feedback(uploadedFile.path, prepareInstructions({ jobTitle, jobDescription }));
@@ -51,6 +51,7 @@ const upload = () => {
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting....');
         console.log('data', data);
+        navigate(`/resume/${uuid}`);
 
 
     }
